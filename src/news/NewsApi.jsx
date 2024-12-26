@@ -24,7 +24,7 @@ const NewsApi = () => {
       const res = await fetch(API); // Fetching data from API
       const data = await res.json();
       console.log(data);
-
+ 
       const allData = data.articles;
 
       const fulfilAlldata = await Promise.all(allData); // Resolving articles data

@@ -11,7 +11,7 @@ This is a responsive news web application that fetches the latest news articles 
 - **Scroll-Up Button**: A scroll-up button appears when the user scrolls down the page, allowing them to quickly return to the top.
 
 ## Technologies Used
-
+ 
 - **React**: JavaScript library for building the user interface.
 - **NewsAPI**: To fetch the latest news articles from the API.
 - **Framer Motion**: For smooth scroll animations and transitions.

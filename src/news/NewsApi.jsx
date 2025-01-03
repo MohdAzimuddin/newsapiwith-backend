@@ -4,34 +4,29 @@ import NewsCard from "./NewsCard";
 import NewsupButton from "./NewsupButton";
 
 const NewsApi = () => {
-  const [news, setNews] = useState([]); //news state
-  const [query, setQuery] = useState("india"); //state to make query of the Api functional
-  const [load, setLoad] = useState(true); //state to store loading status
-  const [error, setError] = useState(null); //state to store error values
+  const [news, setNews] = useState([]); // news state
+  const [query, setQuery] = useState("india"); // state to make query of the API functional
+  const [load, setLoad] = useState(true); // state to store loading status
+  const [error, setError] = useState(null); // state to store error values
   const [search, setSearch] = useState(""); // State to evaluate search input
-  const [selectednav, setSelectednav] = useState("india"); //state to make nav list functional
+  const [selectednav, setSelectednav] = useState("india"); // state to make nav list functional
 
-  // Access the API key dynamically from .env
+  // Backend API URL
+  const BACKEND_URL = "http://localhost:5000/api/news";
 
-
-  const API_key = import.meta.env.VITE_API_KEY;
-
-
-  // Function to fetch news data from the API
+  // Function to fetch news data from the backend
   const fetchApi = async () => {
-    const API = `https://newsapi.org/v2/everything?q=${query}&apiKey=${API_key}`;
     try {
-      const res = await fetch(API); // Fetching data from API
+      setLoad(true);
+      const res = await fetch(`${BACKEND_URL}?query=${query}`); // Fetching data from the backend
       const data = await res.json();
       console.log(data);
- 
-      const allData = data.articles;
 
-      const fulfilAlldata = await Promise.all(allData); // Resolving articles data
-      setNews(fulfilAlldata); // Setting news data in state
+      const allData = data.articles || [];
+      setNews(allData); // Setting news data in state
       setLoad(false); // Update loading status
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching data:", error);
       setLoad(false);
       setError(error); // Setting error state
     }
@@ -44,7 +39,7 @@ const NewsApi = () => {
 
   // Function to handle category clicks
   const handleAnchorClick = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const newQuery = e.target.id; // Get the clicked category
     setQuery(newQuery); // Update query state
     setSelectednav(newQuery); // Update selected navigation state
@@ -62,11 +57,7 @@ const NewsApi = () => {
 
   // Conditional rendering for loading state
   if (load) {
-    return (
-      <>
-        <h1 style={{ textAlign: "center" }}>Loading........</h1>
-      </>
-    );
+    return <h1 style={{ textAlign: "center" }}>Loading........</h1>;
   }
 
   // Conditional rendering for error state
@@ -91,7 +82,6 @@ const NewsApi = () => {
             <a
               href="#"
               onClick={handleAnchorClick}
-              //
               className={selectednav === "technology" ? "selected" : ""}
             >
               <li id="technology">Technology</li>
@@ -121,8 +111,7 @@ const NewsApi = () => {
               value={search} // Controlled input for search
               onChange={(e) => setSearch(e.target.value)} // Update search state on input
             />
-            <button onClick={handleSearch}>Search</button>{" "}
-            {/* Trigger search */}
+            <button onClick={handleSearch}>Search</button>
           </div>
         </nav>
       </header>
@@ -131,8 +120,13 @@ const NewsApi = () => {
         <div className="container">
           <ul className="card">
             {/* Render each news article using NewsCard component */}
-            {news.map((newsArticle,index) => {
-              return <NewsCard key={`${newsArticle.title}-${index}`} news={newsArticle} />;
+            {news.map((newsArticle, index) => {
+              return (
+                <NewsCard
+                  key={`${newsArticle.title}-${index}`}
+                  news={newsArticle}
+                />
+              );
             })}
           </ul>
         </div>
@@ -143,4 +137,3 @@ const NewsApi = () => {
 };
 
 export default NewsApi;
-  
